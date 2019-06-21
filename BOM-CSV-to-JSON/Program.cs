@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using CsvHelper;
-using System.Linq;
-using CsvHelper.Configuration;
+using BOMCSVParser;
 
 namespace BOM_CSV_to_JSON
 {
@@ -19,16 +16,14 @@ namespace BOM_CSV_to_JSON
 
         static int Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-
-            var parser = new BOMCSVParser();
-
-            parser.FilePath = "../../../../../CSVFiles/IDCJAC0009_066062_1800_Data.csv";
+            BOMCSVParser.BOMCSVParser parser = new BOMCSVParser.BOMCSVParser();
+            parser.FilePath = "../../../../../CSVFiles/2018-2019_Data_Test.csv";
 
             var parseSuccess = parser.Parse();
 
             if (!parseSuccess)
             {
+                // Early exit if error with parsing the BOM CSV file.
                 var errors = parser.GetErrors();
                 foreach (KeyValuePair<int, string> error in errors)
                 {
@@ -36,73 +31,19 @@ namespace BOM_CSV_to_JSON
                 }
 
                 Environment.ExitCode = (int)ExitCode.UnknownError;
-            }
-            else
-            {
-                Environment.ExitCode = (int)ExitCode.Success;
+                return Environment.ExitCode;
             }
 
+            // Continue to now generate JSON.
+            JSONBuilder.JSONBuilder builder = new JSONBuilder.JSONBuilder();
+            builder.Data = parser.Data;
+
+            string json = builder.BuildJson();
+
+            Console.WriteLine(json);
+
+            Environment.ExitCode = (int)ExitCode.Success;
             return Environment.ExitCode;
-        }
-    }
-
-    public class BOMCSVParser
-    {
-        public string FilePath { get; set; }
-        public List<DailyRainFall> Data { get; set; }
-        private List<KeyValuePair<int, string>> errors { get; set; }
-
-        // Return true for success, false for errors.
-        public bool Parse()
-        {
-            try
-            {
-                using (var reader = new StreamReader(FilePath))
-                using (var csvReader = new CsvReader(reader))
-                {
-                    csvReader.Configuration.RegisterClassMap<BOMCSVMap>();
-                    Data = csvReader.GetRecords<DailyRainFall>().ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-
-                return false;
-            }
-
-            return true;
-        }
-
-        public List<KeyValuePair<int, string>> GetErrors()
-        {
-            return errors;
-        }
-
-
-        public class DailyRainFall
-        {
-            public DateTime? Date { get; set; }
-            public float? Amount { get; set; }
-        }
-
-        class BOMCSVMap : ClassMap<DailyRainFall>
-        {
-            public BOMCSVMap()
-            {
-                Map(m => m.Date).ConvertUsing(row =>
-                {
-                    DateTime? date = null;
-
-                    int year = int.Parse(row.GetField("Year"));
-                    int month = int.Parse(row.GetField("Month"));
-                    int day = int.Parse(row.GetField("Day"));
-
-                    date = new DateTime(year, month, day);
-
-                    return date;
-                });
-                Map(m => m.Amount).Name("Rainfall amount (millimetres)");
-            }
         }
     }
 }

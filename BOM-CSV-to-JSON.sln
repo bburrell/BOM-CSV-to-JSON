@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BOM-CSV-to-JSON", "BOM-CSV-to-JSON\BOM-CSV-to-JSON.csproj", "{C18FED95-81C1-4920-B04B-DE35120069C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BOMCSVParser", "BOMCSVParser\BOMCSVParser.csproj", "{3D6D4B55-BB6E-424A-8388-943B5B2597A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSONBuilder", "JSONBuilder\JSONBuilder.csproj", "{0C2168A8-D00E-42FF-9ED9-1A563781CAAC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,5 +17,13 @@ Global
 		{C18FED95-81C1-4920-B04B-DE35120069C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C18FED95-81C1-4920-B04B-DE35120069C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C18FED95-81C1-4920-B04B-DE35120069C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D6D4B55-BB6E-424A-8388-943B5B2597A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D6D4B55-BB6E-424A-8388-943B5B2597A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D6D4B55-BB6E-424A-8388-943B5B2597A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D6D4B55-BB6E-424A-8388-943B5B2597A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C2168A8-D00E-42FF-9ED9-1A563781CAAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C2168A8-D00E-42FF-9ED9-1A563781CAAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C2168A8-D00E-42FF-9ED9-1A563781CAAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C2168A8-D00E-42FF-9ED9-1A563781CAAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
