@@ -9,23 +9,19 @@ namespace BOMCSVParser
 {
     public class BOMCSVParser
     {
+        #region Public properties
         public string FilePath { get; set; }
-        private List<DailyRainFall> _dailyRainFallData { get; set; }
-
         public IEnumerable<KeyValuePair<DateTime, float?>> Data {get; set;}
+        #endregion
 
-        private List<KeyValuePair<int, string>> errors { get; set; }
+        #region Private properties
+        private List<DailyRainFall> _dailyRainFallData { get; set; }
+        #endregion
 
-        public List<KeyValuePair<int, string>> GetErrors()
-        {
-            return errors;
-        }
-
+        #region Public methods
         // Return true for success, false for errors.
-        public bool Parse()
+        public void Parse()
         {
-            try
-            {
                 using (var reader = new StreamReader(FilePath))
                 using (var csvReader = new CsvReader(reader))
                 {
@@ -33,16 +29,11 @@ namespace BOMCSVParser
                     _dailyRainFallData = csvReader.GetRecords<DailyRainFall>().ToList();
                     Data = _dailyRainFallData.Select(d => new KeyValuePair<DateTime, float?>(d.Date, d.Amount));
                 }
-            }
-            catch (Exception ex)
-            {
-
-                return false;
-            }
-
-            return true;
         }
+        #endregion
 
+
+        #region Helper classes
         public class DailyRainFall
         {
             public DateTime Date { get; set; }
@@ -68,5 +59,6 @@ namespace BOMCSVParser
                 Map(m => m.Amount).Name("Rainfall amount (millimetres)");
             }
         }
+        #endregion
     }
 }

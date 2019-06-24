@@ -24,9 +24,6 @@ namespace JSONBuilder
                 var yearWeatherData = new WeatherDataForYear();
                 yearWeatherData.Year = yearGrp.Key;
 
-                //var monthlyContainer = new MonthlyAggregatesContainer();
-                //yearWeatherData.MonthlyAggregates = monthlyContainer;
-
                 yearWeatherData.MonthlyAggregates =  yearGrp.GroupBy(p => dateTimeFormatInfo.GetMonthName(p.Key.Month))
                     .Select(monthGrp =>
                 {
@@ -46,11 +43,6 @@ namespace JSONBuilder
                 yearContainer.WeatherDataForYear = yearWeatherData;
                 return yearContainer;
             }).ToList();
-
-            //var root = new
-            //{
-            //    WeatherData = _weatherData
-            //};
 
             string json = JsonConvert.SerializeObject(_weatherData, new JsonSerializerSettings
                 {
@@ -138,8 +130,7 @@ namespace JSONBuilder
         public string Month { get; set; }
     }
 
-
-    public class ToStringJsonConverter : JsonConverter
+    internal class ToStringJsonConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {

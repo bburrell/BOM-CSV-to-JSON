@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using BOMCSVParser;
 
 namespace BOM_CSV_to_JSON
@@ -9,28 +10,43 @@ namespace BOM_CSV_to_JSON
         enum ExitCode
         {
             Success = 0,
+            GeneralError = 1,
             FileNotFound = 2,
-            PathNotFound = 3,
-            UnknownError = 10
+            PathNotFound = 3
         }
 
         static int Main(string[] args)
         {
-            BOMCSVParser.BOMCSVParser parser = new BOMCSVParser.BOMCSVParser();
-            parser.FilePath = "../../../../../CSVFiles/2018-2019_Data_Test.csv";
-
-            var parseSuccess = parser.Parse();
-
-            if (!parseSuccess)
+            if (args.Length != 1)
             {
-                // Early exit if error with parsing the BOM CSV file.
-                var errors = parser.GetErrors();
-                foreach (KeyValuePair<int, string> error in errors)
+                Console.WriteLine("usage:");
+                Console.WriteLine("BOM_CSV_to_JSON <filepath for CSV to be convert>");
+                Environment.ExitCode = (int)ExitCode.GeneralError;
+                return Environment.ExitCode;
+            }
+
+            BOMCSVParser.BOMCSVParser parser = new BOMCSVParser.BOMCSVParser();
+            //parser.FilePath = "../../../../../CSVFiles/2019_Jan-Apr_Data_Test.csv";
+            parser.FilePath = args[0];
+
+            try { 
+                parser.Parse();
+            } catch (Exception ex)
+            {
+                if (ex is FileNotFoundException)
                 {
-                    Console.WriteLine($"Error {error.Key}: {error.Value}");
+                    Environment.ExitCode = (int)ExitCode.FileNotFound;
+                    Console.WriteLine("File not found.");
+                } else if (ex is DirectoryNotFoundException)
+                {
+                    Environment.ExitCode = (int)ExitCode.PathNotFound;
+                    Console.WriteLine("Path not found.");
+                } else
+                {
+                    Environment.ExitCode = (int)ExitCode.GeneralError;
+                    Console.WriteLine("An error occurred trying to parse the input file.");
                 }
 
-                Environment.ExitCode = (int)ExitCode.UnknownError;
                 return Environment.ExitCode;
             }
 
